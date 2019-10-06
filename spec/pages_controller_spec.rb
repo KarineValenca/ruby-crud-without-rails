@@ -53,7 +53,7 @@ RSpec.describe PagesController do
 
         it "unsucessful update" do
             @updated_page = PagesController.update(@page_list, 2, "name", "test2")
-            expect(@update).to eq nil
+            expect(@updated_page).to eq nil
         end
     end
 
