@@ -28,5 +28,6 @@ class TagsController
     def self.delete(tag_list, id)
         tag_list_updated = tag_list.reject { |tag| tag.id == id }
         print tag_list_updated
+        tag_list_updated
     end
 end

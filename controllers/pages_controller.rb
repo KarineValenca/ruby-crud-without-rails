@@ -35,12 +35,18 @@ class PagesController
     def self.delete(page_list, id)
         page_list_updated = page_list.reject { |page| page.id == id }
         print page_list_updated
+        page_list_updated
     end
 
     def self.add_tag(page_list, page_id, tag_list, tag_id)
-        tag = TagsController.read(tag_list, tag_id)
         page = read(page_list, page_id)
-        page.tags << tag
-        print page.tags
+        if page != nil
+            tag = TagsController.read(tag_list, tag_id)
+                if tag != nil
+                    page.tags << tag
+                    print page.tags
+                end
+        end
+        page
     end
 end
