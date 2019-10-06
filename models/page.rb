@@ -7,6 +7,6 @@ class Page
         @id = id
         @name = name
         @slug = slug
-        @config = PageConfig.new(config[0], config[1], config[2])
+        @config = PageConfig.new(config[:title], config[:description], config[:keywords])
     end 
 end

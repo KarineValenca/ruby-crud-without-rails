@@ -3,7 +3,11 @@ require './models/page'
 class PagesController
 
     def self.create(id, name, slug, title, description, keywords)
-        config = [title, description, keywords]
+        config = {
+            title: title, 
+            description: description, 
+            keywords: keywords
+        }
         print "criado página com o nome #{name} e com o slug #{slug}\n"
         Page.new(id, name, slug, config)
     end
