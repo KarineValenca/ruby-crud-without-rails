@@ -1,5 +1,6 @@
 require './models/page'
 require './controllers/tags_controller'
+require './fake_db'
 
 class PagesController
 
@@ -9,24 +10,37 @@ class PagesController
             description: description, 
             keywords: keywords
         }
-        print "criado página: nome: #{name} slug: #{slug}\n"
-        Page.new(id, name, slug, config)
+
+        page = Page.new(id, name, slug, config)
+        FakeDb.add_pages(page)
+
+        print "criado página: Nome: #{page.name} Slug: #{page.slug}
+                Configuração:
+                Título: #{page.config.title}
+                Descrição: #{page.config.description}
+                Palavras-chave: #{page.config.keywords}\n"
+        page
     end
 
     def self.read(page_list, id)
         page = page_list.find { |page| page.id == id }
         if page != nil
-            print "encontrado página: nome: #{page.name} slug: #{page.slug}\n"
+            print "encontrado página: nome: #{page.name} slug: #{page.slug}
+                    Configuração:
+                    Título: #{page.config.title}
+                    Descrição: #{page.config.description}
+                    Palavras-chave: #{page.config.keywords}
+                    Tags: #{page.tags}\n"
             page
         else
             print "Não foi possível encontrar a página\n"
         end
     end
 
-    def self.update(page_list, id, attr, value)
+    def self.update(page_list, id, attribute, value)
         page = read(page_list, id)
         if page != nil
-            page.instance_variable_set("@#{attr}", value)
+            page.instance_variable_set("@#{attribute}", value)
             print "atualizado pagina: nome: #{page.name} slug: #{page.slug}\n"
             page
         end
