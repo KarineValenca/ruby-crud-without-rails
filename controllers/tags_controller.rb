@@ -30,7 +30,6 @@ class TagsController
 
     def self.delete(id)
         tag_list_updated = FakeDb.list_tags.reject! { |tag| tag.id == id }
-        #print tag_list_updated
         tag_list_updated
     end
 end

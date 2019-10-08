@@ -29,7 +29,7 @@ class PagesController
             print "Título: #{page.config.title}\nDescrição: #{page.config.description}\n"
             print "Palavras-chave: #{page.config.keywords}\nTags:\n" 
             page.tags.each do |tag|
-                puts "  #{tag.name}"
+                puts "    #{tag.name}"
             end
             page
         else
@@ -38,17 +38,34 @@ class PagesController
     end
 
     def self.update(id, attribute, value)
-        page = read(id)
-        if page != nil
-            page.instance_variable_set("@#{attribute}", value)
-            print "atualizado pagina: nome: #{page.name} slug: #{page.slug}\n"
-            page
+        valid_attributes = ["name", "slug", "config.title", "config.description", "config.keywords"]
+        
+        if valid_attributes.include? attribute
+        
+            page = read(id)
+            if page != nil
+                if attribute.include? "config."
+                    attribute.slice! "config."
+                    page.config.instance_variable_set("@#{attribute}", value)
+                else
+                    page.instance_variable_set("@#{attribute}", value)
+                end
+                print "\n Atualizado pagina\n"
+                print "Nome: #{page.name}\nSlug: #{page.slug}\nConfiguração:\n"
+                print "Título: #{page.config.title}\nDescrição: #{page.config.description}\n"
+                print "Palavras-chave: #{page.config.keywords}\nTags:\n"
+                page
+            end
+        else
+            print "Atributo inválido, os atributos válidos são:\n"
+            print "name, slug, config.title, config.description, config.keywords\n"
         end
+        
     end
 
     def self.delete(id)
         page_list_updated = FakeDb.list_pages.reject! { |page| page.id == id }
-        print page_list_updated
+        print "deletada página"
         page_list_updated
     end
 
