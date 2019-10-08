@@ -1,4 +1,5 @@
 require './controllers/tags_controller'
+require './views/home_view'
 
 class TagsView
 
@@ -9,8 +10,8 @@ class TagsView
                     1. Criar tag
                     2. Mostrar tag
                     3. Atualizar tag
-                    4. Excluir tag"
-                    option = gets.to_i  
+                    4. Excluir tag\n"
+            option = gets.to_i  
             break if option > 0 && option < 5
         end
 
@@ -21,14 +22,14 @@ class TagsView
             print "Nome: "
             name = gets.chomp
             TagsController.create(id, name)
-            print_view
+            HomeView.main_menu
         end
 
         if option == 2
             print "Qual id da tag que deseja visualizar?\n"
             id = gets.to_i
             TagsController.read(id)
-            print_view
+            HomeView.main_menu
         end
 
         if option == 3
@@ -41,14 +42,14 @@ class TagsView
             print "valor: "
             value = gets.chomp
             TagsController.update(id, attribute, value)
-            print_view
+            HomeView.main_menu
         end
 
         if option == 4
             print "Qual id da tag que deseja excluir?"
             id = gets.to_i
             TagsController.delete(id)
-            print_view
+            HomeView.main_menu
         end
     end
     

@@ -1,4 +1,5 @@
 require "./controllers/pages_controller"
+require "./views/home_view"
 
 class PagesView
     def self.print_view
@@ -31,7 +32,7 @@ class PagesView
             print "Palavras-chave: "
             keywords = gets.chomp
             PagesController.create(id, name, slug, title, description, keywords)
-            print_view
+            HomeView.main_menu
         end
 
         if option == 2
@@ -51,25 +52,23 @@ class PagesView
             print "valor: "
             value = gets.chop
             PagesController.update(id, attribute, value)
-            print_view
+            HomeView.main_menu
         end
 
         if option == 4
             print "Qual id da página que deseja excluir?\n"
             id = gets.to_i
             PagesController.delete(id)
-            print_view
+            HomeView.main_menu
         end
 
-
-        # TO DO: Finalizar aqui
         if option == 5
             print "Qual o id da página que deseja adicionar uma tag?\n"
             page_id = gets.to_i
             print "Qual o id da tag que deseja adicionar?\n"
             tag_id = gets.to_i
             PagesController.add_tag(page_id, tag_id)
-            print_view
+            HomeView.main_menu
         end
     end
 end

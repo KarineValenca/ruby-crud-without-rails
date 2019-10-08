@@ -24,12 +24,13 @@ class PagesController
     def self.read(id)
         page = FakeDb.list_pages.find { |page| page.id == id }
         if page != nil
-            print "encontrado página: nome: #{page.name} slug: #{page.slug}
-                    Configuração:
-                    Título: #{page.config.title}
-                    Descrição: #{page.config.description}
-                    Palavras-chave: #{page.config.keywords}
-                    Tags: #{page.tags}\n"
+            
+            print "Encontrado página:\nNome: #{page.name}\nSlug: #{page.slug}\nConfiguração:\n"
+            print "Título: #{page.config.title}\nDescrição: #{page.config.description}\n"
+            print "Palavras-chave: #{page.config.keywords}\nTags:\n" 
+            page.tags.each do |tag|
+                puts "  #{tag.name}"
+            end
             page
         else
             print "Não foi possível encontrar a página\n"
@@ -57,7 +58,6 @@ class PagesController
             tag = TagsController.read(tag_id)
                 if tag != nil
                     page.tags << tag
-                    print page.tags
                 end
         end
         page
