@@ -1,5 +1,4 @@
 require "./controllers/pages_controller"
-require './fake_db'
 
 class PagesView
     def self.print_view
@@ -38,7 +37,7 @@ class PagesView
         if option == 2
             print "Qual id da página que deseja visualiar?"
             id = gets.to_i
-            PagesController.read(FakeDb.list_pages, id)
+            PagesController.read(id)
             print_view
         end
 
@@ -50,22 +49,27 @@ class PagesView
             #TO DO: map do portugues para ingles
             attribute = gets.chomp
             print "valor: "
-            value = gets.value
-            PagesController.update(FakeDb.list_pages, id, attribute, value)
+            value = gets.chop
+            PagesController.update(id, attribute, value)
             print_view
         end
 
         if option == 4
-            print "Qual id da página que deseja excluir?"
+            print "Qual id da página que deseja excluir?\n"
             id = gets.to_i
-            PagesController.delete(FakeDb.list_pages, id)
+            PagesController.delete(id)
             print_view
         end
 
 
         # TO DO: Finalizar aqui
         if option == 5
-
+            print "Qual o id da página que deseja adicionar uma tag?\n"
+            page_id = gets.to_i
+            print "Qual o id da tag que deseja adicionar?\n"
+            tag_id = gets.to_i
+            PagesController.add_tag(page_id, tag_id)
+            print_view
         end
     end
 end

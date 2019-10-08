@@ -13,4 +13,8 @@ class FakeDb
     def self.add_tags(tag)
         $tags_list << tag
     end
+
+    def self.list_tags
+        $tags_list
+    end
 end

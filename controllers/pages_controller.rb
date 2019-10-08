@@ -3,7 +3,6 @@ require './controllers/tags_controller'
 require './fake_db'
 
 class PagesController
-
     def self.create(id, name, slug, title, description, keywords)
         config = {
             title: title, 
@@ -22,8 +21,8 @@ class PagesController
         page
     end
 
-    def self.read(page_list, id)
-        page = page_list.find { |page| page.id == id }
+    def self.read(id)
+        page = FakeDb.list_pages.find { |page| page.id == id }
         if page != nil
             print "encontrado página: nome: #{page.name} slug: #{page.slug}
                     Configuração:
@@ -37,8 +36,8 @@ class PagesController
         end
     end
 
-    def self.update(page_list, id, attribute, value)
-        page = read(page_list, id)
+    def self.update(id, attribute, value)
+        page = read(id)
         if page != nil
             page.instance_variable_set("@#{attribute}", value)
             print "atualizado pagina: nome: #{page.name} slug: #{page.slug}\n"
@@ -46,16 +45,16 @@ class PagesController
         end
     end
 
-    def self.delete(page_list, id)
-        page_list_updated = page_list.reject { |page| page.id == id }
+    def self.delete(id)
+        page_list_updated = FakeDb.list_pages.reject! { |page| page.id == id }
         print page_list_updated
         page_list_updated
     end
 
-    def self.add_tag(page_list, page_id, tag_list, tag_id)
-        page = read(page_list, page_id)
+    def self.add_tag(page_id, tag_id)
+        page = read(page_id)
         if page != nil
-            tag = TagsController.read(tag_list, tag_id)
+            tag = TagsController.read(tag_id)
                 if tag != nil
                     page.tags << tag
                     print page.tags

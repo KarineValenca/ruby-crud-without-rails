@@ -1,6 +1,7 @@
 require "./controllers/pages_controller"
 require "./controllers/tags_controller"
 require "./pages_view"
+require "./tags_view"
 
 class Main
     
@@ -20,11 +21,7 @@ class Main
         if option == 1 
             PagesView.print_view
         elsif option == 2
-            print "Escolha o que deseja fazer
-                1. Criar tag
-                2. Mostrar tag
-                3. Atualizar tag
-                4. Excluir tag"
+            TagsView.print_view
         end
    
     #  page = PagesController.create(1, "teste", "teste", "titulo", "description", "bla bla")
