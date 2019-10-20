@@ -1,7 +1,6 @@
 require './models/page'
 require './controllers/tags_controller'
 require './database/pages_database'
-require 'mysql2'
 
 class PagesController
     def self.create(id, name, slug, title, description, keywords)
@@ -23,18 +22,18 @@ class PagesController
         page
     end
 
-    def self.read(id)
-        
-        page_info = PagesDatabase.read(id)
-        print page_info
-        page = Page.new(page_info[:id], page_info[:name], page_info[:slug], page_info[:config])
-
-        if page != nil
-            print "Encontrado página:\nNome: #{page.name}\nSlug: #{page.slug}\nConfiguração:\n"
-            print "Título: #{page.config.title}\nDescrição: #{page.config.description}\n"
-            print "Palavras-chave: #{page.config.keywords}\nTags:\n" 
-            page.tags.each do |tag|
-                puts "    #{tag.name}"
+    #TODO SHOW TAGS 
+    def self.read(id)    
+        page = PagesDatabase.read(id)
+    
+        if page.any?
+            print "Encontrado página:\nNome: #{page[:name]}\nSlug: #{page[:slug]}\nConfiguração:\n"
+            print "Título: #{page[:config][:title]}\nDescrição: #{page[:config][:description]}\n"
+            print "Palavras-chave: #{page[:config][:keywords]}\nTags:\n" 
+            if page[:tags] != nil
+                page[:tags].each do |tag|
+                    puts "    #{tag.name}"
+                end
             end
             page
         else
@@ -51,9 +50,9 @@ class PagesController
             if page != nil
                 if attribute.include? "config."
                     attribute.slice! "config."
-                    page.config.instance_variable_set("@#{attribute}", value)
+                    ConfigDatabase.update(id, attribute, value)
                 else
-                    page.instance_variable_set("@#{attribute}", value)
+                    PagesDatabase.update(id, attribute, value)
                 end
                 print "\n Atualizado pagina\n"
                 print "Nome: #{page.name}\nSlug: #{page.slug}\nConfiguração:\n"
@@ -70,9 +69,7 @@ class PagesController
 
     def self.delete(id)
         PagesDatabase.delete(id)
-        page_list_updated = FakeDb.list_pages.reject! { |page| page.id == id }
         print "deletada página"
-        page_list_updated
     end
 
     def self.add_tag(page_id, tag_id)
@@ -80,7 +77,7 @@ class PagesController
         if page != nil
             tag = TagsController.read(tag_id)
                 if tag != nil
-                    page.tags << tag
+                    PagesDatabase.add_tag(page_id, tag_id)
                 end
         end
         page

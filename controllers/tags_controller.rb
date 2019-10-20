@@ -1,18 +1,19 @@
 require './models/tag'
 require './fake_db'
+require './database/tags_database'
 
 class TagsController
     def self.create(id, name)
         tag = Tag.new(id, name)
         print "criado tag com o nome #{tag.name}\n"
-        FakeDb.add_tags(tag)
+        TagsDatabase.create(tag)
         tag
     end
 
     def self.read(id)
-        tag = FakeDb.list_tags.find { |tag| tag.id == id }
-        if tag != nil
-            print "encontrado tag: nome: #{tag.name}\n"
+        tag = TagsDatabase.read(id)
+        if tag.any?
+            print "encontrado tag: nome: #{tag[:name]}\n"
             tag
         else
             print "não foi possivel encontrar tag\n"
@@ -22,14 +23,15 @@ class TagsController
     def self.update(id, attr, value)
         tag = read(id)
         if tag != nil
-            tag.instance_variable_set("@#{attr}", value)
-            print "atualizado tag: nome: #{tag.name}\n"
-            tag
+            TagsDatabase.update(id, attr, value)
         end
     end
 
     def self.delete(id)
-        tag_list_updated = FakeDb.list_tags.reject! { |tag| tag.id == id }
-        tag_list_updated
+        tag = read(id)
+        print tag
+        if tag != nil
+            TagsDatabase.delete(id)
+        end
     end
 end

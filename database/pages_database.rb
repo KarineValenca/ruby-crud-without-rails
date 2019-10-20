@@ -1,17 +1,18 @@
+require 'mysql2'
+require './database/config_database'
+
 class PagesDatabase
 
     def self.create(page)
-        # TODO - Config part
         connection = Mysql2::Client.new(:host => "localhost", :username => "root", :password => "root", :database => "crud")
         results = connection.query("INSERT INTO page (id, name, slug) VALUES (#{page.id}, '#{page.name}', '#{page.slug}')")
-        results = connection.query("INSERT INTO page_config (title, description, keywords, page_id) VALUES ('#{page.config.title}', '#{page.config.description}', '#{page.config.keywords}', #{page.id})")
         connection.close
+        ConfigDatabase.create(page)
     end
 
     def self.read(id)
         page = {}
         config = {}
-         # TODO - Config part
         connection = Mysql2::Client.new(:host => "localhost", :username => "root", :password => "root", :database => "crud")
         results = connection.query("SELECT * FROM page WHERE id = '#{id}'")
         config_results = connection.query("SELECT * from page_config where page_id = '#{id}'")
@@ -31,11 +32,23 @@ class PagesDatabase
         page
     end
 
+    def self.update(id, attr, value)
+        connection = Mysql2::Client.new(:host => "localhost", :username => "root", :password => "root", :database => "crud")
+        results = connection.query("UPDATE page SET #{attr} = '#{value}' WHERE id = #{id}")
+        connection.close
+    end
+
     def self.delete(id)
         connection = Mysql2::Client.new(:host => "localhost", :username => "root", :password => "root", :database => "crud")
         results = connection.query("DELETE FROM page WHERE id = '#{id}'")
         connection.close
+        ConfigDatabase.delete(id)
     end
 
-    
+    def self.add_tag(page_id, tag_id)
+        connection = Mysql2::Client.new(:host => "localhost", :username => "root", :password => "root", :database => "crud")
+        results = connection.query("INSERT INTO pages_tags (page_id, tag_id) VALUES (#{page_id}, #{tag_id})")
+
+        connection.close
+    end
 end
