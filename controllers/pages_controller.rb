@@ -1,6 +1,7 @@
 require './models/page'
 require './controllers/tags_controller'
-require './fake_db'
+require './database/pages_database'
+require 'mysql2'
 
 class PagesController
     def self.create(id, name, slug, title, description, keywords)
@@ -11,7 +12,8 @@ class PagesController
         }
 
         page = Page.new(id, name, slug, config)
-        FakeDb.add_pages(page)
+
+        PagesDatabase.create(page)
 
         print "criado página: Nome: #{page.name} Slug: #{page.slug}
                 Configuração:
@@ -22,9 +24,12 @@ class PagesController
     end
 
     def self.read(id)
-        page = FakeDb.list_pages.find { |page| page.id == id }
+        
+        page_info = PagesDatabase.read(id)
+        print page_info
+        page = Page.new(page_info[:id], page_info[:name], page_info[:slug], page_info[:config])
+
         if page != nil
-            
             print "Encontrado página:\nNome: #{page.name}\nSlug: #{page.slug}\nConfiguração:\n"
             print "Título: #{page.config.title}\nDescrição: #{page.config.description}\n"
             print "Palavras-chave: #{page.config.keywords}\nTags:\n" 
@@ -64,6 +69,7 @@ class PagesController
     end
 
     def self.delete(id)
+        PagesDatabase.delete(id)
         page_list_updated = FakeDb.list_pages.reject! { |page| page.id == id }
         print "deletada página"
         page_list_updated
