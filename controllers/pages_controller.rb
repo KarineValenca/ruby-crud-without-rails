@@ -24,8 +24,8 @@ class PagesController
 
     def self.read(id)    
         page = PagesDatabase.read(id)
-        #TODO Correct verification
-        if page.any?
+        
+        if page.empty?
             print "Encontrado página:\nNome: #{page[:name]}\nSlug: #{page[:slug]}\nConfiguração:\n"
             print "Título: #{page[:config][:title]}\nDescrição: #{page[:config][:description]}\n"
             print "Palavras-chave: #{page[:config][:keywords]}\nTags:\n"
@@ -67,8 +67,11 @@ class PagesController
     end
 
     def self.delete(id)
-        PagesDatabase.delete(id)
-        print "deletada página"
+        page = read(id)
+        if page != nil
+            PagesDatabase.delete(id)
+            print "deletada página"
+        end
     end
 
     def self.add_tag(page_id, tag_id)
