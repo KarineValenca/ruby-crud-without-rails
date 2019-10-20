@@ -13,9 +13,11 @@ class PagesDatabase
     def self.read(id)
         page = {}
         config = {}
+        tags = []
         connection = Mysql2::Client.new(:host => "localhost", :username => "root", :password => "root", :database => "crud")
         results = connection.query("SELECT * FROM page WHERE id = '#{id}'")
         config_results = connection.query("SELECT * from page_config where page_id = '#{id}'")
+        tags_results = connection.query("SELECT * from pages_tags where page_id = '#{id}'")
         results.each do |row|
             page[:id] = row["id"].to_i
             page[:name] = row["name"]
@@ -26,8 +28,12 @@ class PagesDatabase
             config[:description] = row["description"]
             config[:keywords] = row["keywords"]
         end
+        tags_results.each do |row|
+            tags << row["tag_id"]
+
+        end
         connection.close
-        
+        page[:tags] = tags
         page[:config] = config
         page
     end

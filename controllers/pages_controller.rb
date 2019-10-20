@@ -22,17 +22,16 @@ class PagesController
         page
     end
 
-    #TODO SHOW TAGS 
     def self.read(id)    
         page = PagesDatabase.read(id)
-    
+        #TODO Correct verification
         if page.any?
             print "Encontrado página:\nNome: #{page[:name]}\nSlug: #{page[:slug]}\nConfiguração:\n"
             print "Título: #{page[:config][:title]}\nDescrição: #{page[:config][:description]}\n"
-            print "Palavras-chave: #{page[:config][:keywords]}\nTags:\n" 
+            print "Palavras-chave: #{page[:config][:keywords]}\nTags:\n"
             if page[:tags] != nil
                 page[:tags].each do |tag|
-                    puts "    #{tag.name}"
+                    TagsController.read(tag)
                 end
             end
             page
